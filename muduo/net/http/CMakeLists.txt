@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.0)
 set(http_SRCS
   HttpServer.cc
   HttpResponse.cc
@@ -9,6 +10,7 @@ target_link_libraries(muduo_http muduo_net)
 
 install(TARGETS muduo_http DESTINATION lib)
 set(HEADERS
+  HttpContext.h
   HttpRequest.h
   HttpResponse.h
   HttpServer.h

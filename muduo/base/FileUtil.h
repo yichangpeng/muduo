@@ -13,6 +13,7 @@
 
 #include <muduo/base/StringPiece.h>
 #include <boost/noncopyable.hpp>
+#include <sys/types.h>  // for off_t
 
 namespace muduo
 {
@@ -74,7 +75,7 @@ class AppendFile : boost::noncopyable
 
   void flush();
 
-  size_t writtenBytes() const { return writtenBytes_; }
+  off_t writtenBytes() const { return writtenBytes_; }
 
  private:
 
@@ -82,7 +83,7 @@ class AppendFile : boost::noncopyable
 
   FILE* fp_;
   char buffer_[64*1024];
-  size_t writtenBytes_;
+  off_t writtenBytes_;
 };
 }
 

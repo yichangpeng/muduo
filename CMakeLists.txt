@@ -8,10 +8,16 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
 endif()
 
+if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.8)
+    SET(CMAKE_CXX_STAND_FLAGS "${CMAKE_CXX_STAND_FLAGS} -std=c++0x" )
+else()
+    SET(CMAKE_CXX_STAND_FLAGS "${CMAKE_CXX_STAND_FLAGS} -std=c++11" )
+endif()
+
 set(CXX_FLAGS
  -g
  # -DVALGRIND
- # -DMUDUO_STD_STRING
+ -DMUDUO_STD_STRING
  -DCHECK_PTHREAD_RETURN_VALUE
  -D_FILE_OFFSET_BITS=64
  -Wall
@@ -26,7 +32,7 @@ set(CXX_FLAGS
  -Wwrite-strings
  -march=native
  # -MMD
- # -std=c++0x
+ ${CMAKE_CXX_STAND_FLAGS}
  -rdynamic
  )
 if(CMAKE_BUILD_BITS EQUAL 32)
@@ -50,6 +56,7 @@ find_path(MHD_INCLUDE_DIR microhttpd.h)
 find_library(MHD_LIBRARY NAMES microhttpd)
 find_library(BOOSTTEST_LIBRARY NAMES boost_unit_test_framework)
 find_library(BOOSTPO_LIBRARY NAMES boost_program_options)
+find_library(BOOSTSYSTEM_LIBRARY NAMES boost_system)
 find_path(TCMALLOC_INCLUDE_DIR gperftools/heap-profiler.h)
 find_library(TCMALLOC_LIBRARY NAMES tcmalloc_and_profiler)
 find_path(HIREDIS_INCLUDE_DIR hiredis/hiredis.h)

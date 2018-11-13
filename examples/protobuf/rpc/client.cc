@@ -73,7 +73,7 @@ int main(int argc, char* argv[])
   if (argc > 1)
   {
     EventLoop loop;
-    InetAddress serverAddr(argv[1], 9981);
+    InetAddress serverAddr(argv[1], 40001);
 
     RpcClient rpcClient(&loop, serverAddr);
     rpcClient.connect();

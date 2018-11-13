@@ -7,7 +7,7 @@
 using namespace muduo;
 
 AsyncLogging::AsyncLogging(const string& basename,
-                           size_t rollSize,
+                           off_t rollSize,
                            int flushInterval)
   : flushInterval_(flushInterval),
     running_(false),
@@ -17,8 +17,8 @@ AsyncLogging::AsyncLogging(const string& basename,
     latch_(1),
     mutex_(),
     cond_(mutex_),
-    currentBuffer_(new Buffer),
-    nextBuffer_(new Buffer),
+    currentBuffer_(new Buffer,0),
+    nextBuffer_(new Buffer,0),
     buffers_()
 {
   currentBuffer_->bzero();
@@ -43,7 +43,7 @@ void AsyncLogging::append(const char* logline, int len)
     }
     else
     {
-      currentBuffer_.reset(new Buffer); // Rarely happens
+      currentBuffer_.reset(new Buffer,0); // Rarely happens
     }
     currentBuffer_->append(logline, len);
     cond_.notify();
@@ -55,8 +55,8 @@ void AsyncLogging::threadFunc()
   assert(running_ == true);
   latch_.countDown();
   LogFile output(basename_, rollSize_, false);
-  BufferPtr newBuffer1(new Buffer);
-  BufferPtr newBuffer2(new Buffer);
+  BufferPtr newBuffer1(new Buffer,0);
+  BufferPtr newBuffer2(new Buffer,0);
   newBuffer1->bzero();
   newBuffer2->bzero();
   BufferVector buffersToWrite;
